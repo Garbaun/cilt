@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kredi Yükle</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #e0e0e0; /* Orta gri arka plan */
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background-color: #d0d0d0; /* Header için biraz daha koyu gri */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        header .kredi-button {
+            background-color: #c0c0c0; /* Buton için orta gri */
+            color: #333;
+            border: 3px solid #b0b0b0; /* Kalın çerçeve, biraz daha koyu */
+            border-radius: 0;
+            padding: 10px 15px;
+            margin-right: 10px;
+            font-weight: 600;
+            cursor: pointer; /* Buton için el işareti */
+        }
+        header .kredi-button span {
+            color: red;
+            text-decoration: none;
+        }
+        header .cilt-ai-logo {
+            margin-right: auto; /* Logoyu sağa iter */
+            margin-left: auto; /* Logoyu sola iter, sonuçta ortalar */
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            font-size: 35px;
+            font-weight: bold;
+            color: #555;
+            cursor: pointer; /* Logo için el işareti */
+        }
+        header .cilt-ai-logo img{
+            height: 100%;
+        }
+        header .sag-butonlar { /* Yeni div oluşturuldu */
+            display: flex; /* Flexbox kullanıyoruz */
+            align-items: center; /* Dikeyde ortalıyoruz */
+        }
+        header .profil-button, header .klinik-button {
+            display: flex;
+            align-items: center;
+            background-color: #c0c0c0;
+            color: #333;
+            border: 3px solid #b0b0b0;
+            border-radius: 0;
+            padding: 10px 15px;
+            font-weight: 600;
+            margin-left: 10px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            cursor: pointer; /* Butonlar için el işareti */
+        }
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .container {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f0f0f0;
+            border: 3px solid #c0c0c0;
+            border-radius: 0;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+        .kredi-paketleri {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr); /* 2 üstte, 2 altta için 2 sütun */
+            gap: 25px;
+            margin-top: 20px;
+            justify-content: center;
+        }
+        .kredi-paketleri .paket-kart {
+            background-color: #e8e8e8;
+            border: 3px solid #b0b0b0;
+            border-radius: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease-in-out;
+        }
+        .kredi-paketleri .paket-kart:hover {
+            transform: translateY(-5px);
+        }
+        .paket-kart h2 {
+            color: #3498db;
+            font-size: 2.2em;
+            margin-bottom: 10px;
+        }
+        .paket-kart p {
+            font-size: 1.1em;
+            color: #555;
+            margin-bottom: 15px;
+        }
+        .paket-kart .fiyat {
+            font-size: 1.8em;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+        .neomorfik-button {
+            padding: 15px 25px;
+            border: 3px solid #2980b9;
+            border-radius: 0;
+            font-size: 1.1em;
+            cursor: pointer;
+            background-color: #3498db;
+            color: #fff;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s ease;
+            font-weight: bold;
+            display: block;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .neomorfik-button:hover {
+            background-color: #217dbb;
+        }
+        footer {
+            background-color: #d0d0d0;
+            color: #333;
+            padding: 10px;
+            text-align: center;
+            font-size: 14px;
+            margin-top: 20px;
+            border-top: 3px solid #c0c0c0;
+        }
+        .kanduras-medya-link {
+            cursor: pointer;
+        }
+
+        /* Modal Stilleri */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 30px;
+            border: 3px solid #c0c0c0;
+            border-radius: 0;
+            width: 80%;
+            max-width: 400px;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        .close-button {
+            color: #aaa;
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .close-button:hover,
+        .close-button:focus {
+            color: #333;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        #modal-message {
+            margin-bottom: 20px;
+            font-size: 1.1em;
+            color: #333;
+        }
+        #modal-ok-button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            font-size: 1em;
+        }
+
+        /* Responsive ayarlar */
+        @media (max-width: 600px) {
+            .kredi-paketleri {
+                grid-template-columns: 1fr; /* Küçük ekranlarda tek sütun */
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="kredi-button" onclick="window.location.href='kredi-yukle.html'">
+            100 Kredi Yüklü <span style="color: red;">Kredi Yükle</span>
+        </div>
+        <div class="cilt-ai-logo" onclick="window.location.href='index.html'">
+             cilt.ai beta v1.26
+        </div>
+        <div class="sag-butonlar">
+            <div class="profil-button" onclick="window.location.href='profil-giris.html'">Profil Giriş</div>
+            <div class="klinik-button" onclick="window.location.href='klinik-giris.html'">Klinik Giriş</div>
+        </div>
+    </header>
+    <main>
+        <div class="container">
+            <h1>Kredi Yükle</h1>
+            <p>Cilt analizleri için kredi yükleyerek kesintisiz hizmet alın.</p>
+
+            <div class="kredi-paketleri">
+                <div class="paket-kart">
+                    <h2>100 Kredi</h2>
+                    <p>Hızlı analizler için başlangıç paketi.</p>
+                    <div class="fiyat">1.00 USD</div>
+                    <button class="neomorfik-button" data-kredi="100" data-fiyat="1.00">Satın Al</button>
+                </div>
+
+                <div class="paket-kart">
+                    <h2>250 Kredi</h2>
+                    <p>Düzenli kullanımlar için ideal.</p>
+                    <div class="fiyat">2.00 USD</div>
+                    <button class="neomorfik-button" data-kredi="250" data-fiyat="2.00">Satın Al</button>
+                </div>
+
+                <div class="paket-kart">
+                    <h2>500 Kredi</h2>
+                    <p>Avantajlı fiyatla daha fazla analiz.</p>
+                    <div class="fiyat">4.00 USD</div>
+                    <button class="neomorfik-button" data-kredi="500" data-fiyat="4.00">Satın Al</button>
+                </div>
+
+                <div class="paket-kart">
+                    <h2>1000 Kredi</h2>
+                    <p>Profesyonel ve yoğun kullanımlar için.</p>
+                    <div class="fiyat">8.00 USD</div>
+                    <button class="neomorfik-button" data-kredi="1000" data-fiyat="8.00">Satın Al</button>
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer>
+        cilt.ai <span class="kanduras-medya-link" onclick="window.open('http://www.kandurasmedya.com', '_blank')">Kanduras Medya</span> oluşumudur. Tüm Hakları Saklıdır. Copyright 2025 ©
+    </footer>
+
+    <div id="custom-alert-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <p id="modal-message"></p>
+            <button id="modal-ok-button" class="neomorfik-button">Tamam</button>
+        </div>
+    </div>
+
+    <script>
+        // Custom Alert Modal elementleri
+        const customAlertModal = document.getElementById('custom-alert-modal');
+        const modalMessage = document.getElementById('modal-message');
+        const modalOkButton = document.getElementById('modal-ok-button');
+        const closeButton = document.querySelector('.modal .close-button');
+
+        // Custom Alert modalını gösterme fonksiyonu
+        function showCustomAlert(message) {
+            modalMessage.textContent = message;
+            customAlertModal.style.display = 'flex'; // Use flex to center
+        }
+
+        // Custom Alert modalını gizleme fonksiyonu
+        function hideCustomAlert() {
+            customAlertModal.style.display = 'none';
+        }
+
+        // Modal buton ve kapatma işlevleri
+        modalOkButton.addEventListener('click', hideCustomAlert);
+        closeButton.addEventListener('click', hideCustomAlert);
+
+        // Modal dışına tıklandığında kapatma
+        window.addEventListener('click', (event) => {
+            if (event.target == customAlertModal) {
+                hideCustomAlert();
+            }
+        });
+
+        const satinAlButtons = document.querySelectorAll('.kredi-paketleri .neomorfik-button');
+
+        satinAlButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const krediMiktari = this.dataset.kredi;
+                const fiyat = this.dataset.fiyat;
+                showCustomAlert(`${krediMiktari} Kredi (${fiyat} USD) satın alma işlemi başlatıldı. Ödeme sayfasına yönlendiriliyorsunuz...`);
+                // Gerçek bir uygulamada burada ödeme sayfasına yönlendirme veya ödeme API'si çağrısı yapılır.
+                // window.location.href = `odeme.html?kredi=${krediMiktari}&fiyat=${fiyat}`;\
+            });
+        });
+
+        // Header ve Footer butonlarına tıklama olayları
+        const krediButton = document.querySelector("header .kredi-button");
+        const profilButton = document.querySelector("header .profil-button");
+        const klinikButton = document.querySelector("header .klinik-button");
+        const ciltAiLogo = document.querySelector("header .cilt-ai-logo");
+        const kandurasMedyaLink = document.querySelector("footer .kanduras-medya-link");
+
+
+        if (krediButton) {
+            krediButton.addEventListener("click", () => {
+                window.location.href = 'kredi-yukle.html'; // Zaten bu sayfada olduğunuz için yenileme görevi görür
+            });
+        }
+        if (profilButton) {
+            profilButton.addEventListener("click", () => {
+                window.location.href = 'profil-giris.html';
+            });
+        }
+        if (klinikButton) {
+            klinikButton.addEventListener("click", () => {
+                window.location.href = 'klinik-giris.html';
+            });
+        }
+        if (ciltAiLogo) {
+            ciltAiLogo.addEventListener("click", () => {
+                window.location.href = 'index.html';
+            });
+        }
+        if (kandurasMedyaLink) {
+             kandurasMedyaLink.addEventListener("click", () => {
+                 window.open('http://www.kandurasmedya.com', '_blank');
+             });
+         }
+    </script>
+</body>
+</html>

@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yapay Zeka Cilt Analizi - Sonuçlar</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #e0e0e0; /* Açık griden biraz daha koyu */
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background-color: #d0d0d0; /* Header için biraz daha koyu gri */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        header .kredi-button {
+            background-color: #c0c0c0; /* Buton için orta gri */
+            color: #333;
+            border: 3px solid #b0b0b0; /* Kalın çerçeve, biraz daha koyu */
+            border-radius: 0;
+            padding: 10px 15px;
+            margin-right: 10px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        header .kredi-button span {
+            color: red;
+            text-decoration: none;
+        }
+        header .cilt-ai-logo {
+            margin-right: auto;
+            margin-left: auto;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            font-size: 35px;
+            font-weight: bold;
+            color: #555; /* Daha az kontrastlı gri */
+            cursor: pointer;
+        }
+        header .cilt-ai-logo img{
+            height: 100%;
+        }
+        header .sag-butonlar {
+            display: flex;
+            align-items: center;
+        }
+        header .profil-button, header .klinik-button {
+            display: flex;
+            align-items: center;
+            background-color: #c0c0c0; /* Buton için orta gri */
+            color: #333;
+            border: 3px solid #b0b0b0; /* Kalın çerçeve, biraz daha koyu */
+            border-radius: 0;
+            padding: 10px 15px;
+            font-weight: 600;
+            margin-left: 10px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            cursor: pointer;
+        }
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .container {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f0f0f0; /* İçerik kutusu için açık gri */
+            border: 3px solid #c0c0c0; /* Kalın çerçeve */
+            border-radius: 0;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+        .sonuc-formu {
+            background-color: #e8e8e8; /* Form alanı için hafif gri */
+            padding: 20px;
+            border: 3px solid #c0c0c0;
+            border-radius: 0;
+            margin-bottom: 20px;
+            text-align: left;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            font-size: 18px;
+        }
+        .sonuc-formu label {
+            display: block;
+            margin-top: 10px;
+            text-align: left;
+            font-weight: bold;
+            color: #555;
+            grid-column: 1;
+        }
+        .sonuc-formu input, .sonuc-formu select {
+            width: 100%;
+            padding: 8px 10px;
+            margin-top: 5px;
+            border: 3px solid #c0c0c0;
+            border-radius: 0;
+            box-sizing: border-box;
+            grid-column: 2;
+            font-size: 16px;
+            background-color: #f5f5f5; /* Input arka planı */
+            color: #333;
+        }
+        .sonuc-formu .yuzde-deger {
+            margin-top: 5px;
+            text-align: left;
+            color: #555;
+            grid-column: 3;
+            font-weight: bold;
+            font-size: 16px;
+        }
+        .galeri {
+            display: flex;
+            justify-content: space-around; /* Resimler arasında eşit boşluk bırak */
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+        .galeri .galeri-item { /* Her bir resim ve açıklaması için yeni bir kapsayıcı */
+            width: 23%; /* 4 resim için uygun genişlik, boşlukları da hesaba kat */
+            margin-bottom: 15px; /* Resimler arasında dikey boşluk */
+            text-align: center;
+        }
+        .galeri img {
+            width: 100%;
+            height: auto;
+            border: 3px solid #c0c0c0;
+            border-radius: 0;
+            object-fit: cover;
+            margin-bottom: 5px; /* Resim ile açıklama arasına boşluk */
+        }
+        .galeri .aciklama {
+            font-size: 14px;
+            color: #666;
+            font-weight: bold;
+        }
+        .urun-onerileri {
+            margin-top: 30px;
+            text-align: left;
+            width: 100%;
+        }
+        .urun-onerileri h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .urun-galerisi {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+        }
+        .urun-galerisi .urun-item {
+            width: 23%; /* 4 ürün için uygun genişlik */
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        .urun-galerisi img {
+            width: 100%;
+            height: auto;
+            border: 3px solid #c0c0c0;
+            border-radius: 0;
+            object-fit: cover;
+            margin-bottom: 5px;
+        }
+        .urun-galerisi .urun-adi {
+            font-size: 14px;
+            color: #555;
+            font-weight: bold;
+        }
+        .kaynaklar {
+            text-align: left;
+            margin-top: 30px; /* Ürün önerileri ile kaynaklar arasına boşluk */
+        }
+        .kaynaklar ul li a {
+            color: red;
+            text-decoration: underline;
+        }
+        .lisans {
+            margin-top: 20px;
+            padding: 15px;
+            border-top: 3px solid #c0c0c0;
+            text-align: center;
+            font-size: 0.9em;
+            color: #666;
+        }
+        .onay-kutusu {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+            text-align: left;
+        }
+        .onay-kutusu input {
+            margin-right: 10px;
+        }
+        .neomorfik-button,
+        #sonuclari-kaydet,
+        #iyilesme-takibi {
+            padding: 15px 30px;
+            border: 3px solid #2980b9;
+            border-radius: 0;
+            font-size: 18px;
+            cursor: pointer;
+            background-color: #3498db;
+            color: #fff;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s ease;
+            font-weight: bold;
+            margin: 5px;
+        }
+        .neomorfik-button:hover,
+        #sonuclari-kaydet:hover,
+        #iyilesme-takibi:hover {
+            background-color: #217dbb;
+        }
+        footer {
+            background-color: #d0d0d0; /* Footer için orta gri */
+            color: #333;
+            padding: 10px;
+            text-align: center;
+            font-size: 14px;
+            margin-top: 20px;
+            border-top: 3px solid #c0c0c0;
+        }
+        footer .kanduras-medya-link {
+            color: inherit;
+            text-decoration: none;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        footer p a {
+            color: #3498db;
+            text-decoration: underline;
+            font-weight: bold;
+        }
+        footer p a:hover {
+            color: #217dbb;
+        }
+        .klinik-banner {
+            background-color: #e0f7fa; /* Mevcut banner rengi */
+            color: #00897b;
+            padding: 15px;
+            text-align: center;
+            border-bottom: 3px solid #b2ebf2;
+            margin-bottom: 20px;
+            border-radius: 0;
+        }
+        /* Kişiselleştirilmiş Rutin Bölümü Stilleri */
+        .personalized-routine-section {
+            margin-top: 30px;
+            text-align: center;
+            width: 100%;
+        }
+        .personalized-routine-section h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+        .routine-output {
+            background-color: #e8e8e8;
+            padding: 20px;
+            border: 3px solid #c0c0c0;
+            border-radius: 0;
+            margin-top: 20px;
+            text-align: left;
+            min-height: 100px; /* En azından bir miktar yükseklik */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow-x: auto; /* Yatay kaydırma çubuğu */
+            white-space: pre-wrap; /* Metin taşmasını önle */
+        }
+        #generated-routine-content ul {
+            list-style-type: disc;
+            padding-left: 20px;
+        }
+        #generated-routine-content li {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="kredi-button" onclick="window.location.href='kredi-yukle.html'">
+            100 Kredi Yüklü <span style="color: red;">Kredi Yükle</span>
+        </div>
+        <div class="cilt-ai-logo" onclick="window.location.href='index.html'">
+             cilt.ai beta v1.26
+        </div>
+        <div class="sag-butonlar">
+            <div class="profil-button" onclick="window.location.href='profil-giris.html'">Profil Giriş</div>
+            <div class="klinik-button" onclick="window.location.href='klinik-giris.html'">Klinik Giriş</div>
+        </div>
+    </header>
+    <main>
+        <div class="container">
+            <div class="klinik-banner">
+                <strong>Klinik Adı:</strong> INNOVATION YALOVA | <strong>Klinik Personeli:</strong> Yağmur Aydan Anıkarslan
+            </div>
+            <h1>Cilt Analizi Sonuçları</h1>
+            <div class="sonuc-formu"> <label for="cilt-tipi">Cilt Tipi:</label>
+                <input type="text" id="cilt-tipi" value="Yağlı" readonly>
+                <div class="yuzde-deger"> %60</div>
+
+                <label for="kuruluk-bolgeleri">Kuruluk Bölgeleri:</label>
+                <input type="text" id="kuruluk-bolgeleri" value="Alın, Çene" readonly>
+                <div class="yuzde-deger"> %70</div>
+
+                <label for="cilt-tedavisi">Cilt Tedavisi:</label>
+                <select id="cilt-tedavisi" disabled>
+                    <option value="hayir" selected>Hayır</option>
+                    <option value="evet">Evet</option>
+                </select>
+                <div class="yuzde-deger"> %85</div>
+
+                <label for="cilt-tonu">Cilt Tonu:</label>
+                <input type="text" id="cilt-tonu" value="Açık" readonly>
+                <div class="yuzde-deger"> %92</div>
+
+                <label for="yas-araligi">Yaş Aralığı:</label>
+                <input type="text" id="yas-araligi" value="25-30" readonly>
+                <div class="yuzde-deger"> %78</div>
+
+                <label for="cinsiyet">Cinsiyet:</label>
+                <select id="cinsiyet" disabled>
+                    <option value="kadin" selected>Kadın</option>
+                    <option value="erkek">Erkek</option>
+                </select>
+                <div class="yuzde-deger"> %95</div>
+
+                <label for="hamilelik">Hamilelik:</label>
+                <select id="hamilelik" disabled>
+                    <option value="sifir" selected>Sıfır</option>
+                    <option value="evet">Evet</option>
+                    <option value="hayir">Hayır</option>
+                </select>
+                <div class="yuzde-deger"> %0</div>
+
+                <label for="analiz-turu">Analiz Türü:</label>
+                <input type="text" id="analiz-turu" value="İlk Analiz" readonly>
+                <div class="yuzde-deger"> %89</div>
+            </div>
+
+            <div class="galeri">
+                <div class="galeri-item">
+                    <img src="https://placehold.co/200x300/c0c0c0/333333?text=Galeri+1" alt="Galeri Resim 1">
+                    <p class="aciklama">Açıklama 1</p>
+                </div>
+                <div class="galeri-item">
+                    <img src="https://placehold.co/200x300/c0c0c0/333333?text=Galeri+2" alt="Galeri Resim 2">
+                    <p class="aciklama">Açıklama 2</p>
+                </div>
+                <div class="galeri-item">
+                    <img src="https://placehold.co/200x300/c0c0c0/333333?text=Galeri+3" alt="Galeri Resim 3">
+                    <p class="aciklama">Açıklama 3</p>
+                </div>
+                <div class="galeri-item">
+                    <img src="https://placehold.co/200x300/c0c0c0/333333?text=Galeri+4" alt="Galeri Resim 4">
+                    <p class="aciklama">Açıklama 4</p>
+                </div>
+            </div>
+
+            <div class="urun-onerileri">
+                <h2>Ürün Önerileri</h2>
+                <div class="urun-galerisi">
+                    <div class="urun-item">
+                        <img src="https://placehold.co/150x150/d0d0d0/333333?text=Nemlendirici" alt="Nemlendirici Krem">
+                        <p class="urun-adi">Nemlendirici Krem</p>
+                    </div>
+                    <div class="urun-item">
+                        <img src="https://placehold.co/150x150/d0d0d0/333333?text=Cilt+Serumu" alt="Cilt Serumu">
+                        <p class="urun-adi">Cilt Serumu</p>
+                    </div>
+                    <div class="urun-item">
+                        <img src="https://placehold.co/150x150/d0d0d0/333333?text=Güneş+Kremi" alt="Güneş Kremi">
+                        <p class="urun-adi">Güneş Kremi</p>
+                    </div>
+                    <div class="urun-item">
+                        <img src="https://placehold.co/150x150/d0d0d0/333333?text=Temizleyici" alt="Temizleme Jeli">
+                        <p class="urun-adi">Temizleme Jeli</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="personalized-routine-section">
+                <h2>Kişiselleştirilmiş Bakım Rutini ✨</h2>
+                <button id="generate-routine-button" class="neomorfik-button">Rutini Oluştur</button>
+                <div id="routine-output" class="routine-output">
+                    <p id="loading-indicator" style="display: none; color: #555;">Rutininiz oluşturuluyor, lütfen bekleyiniz...</p>
+                    <div id="generated-routine-content"></div>
+                </div>
+            </div>
+
+            <div class="kaynaklar">
+                <p><strong>Kaynaklar:</strong></p>
+                <ul>
+                    <li><a href="https://www.example.com/kaynak1">Kaynak 1</a> - Cilt bakımı hakkında genel bilgiler.</li>
+                    <li><a href="https://www.example.com/kaynak2">Kaynak 2</a> - Cilt hastalıkları ve tedavi yöntemleri.</li>
+                </ul>
+            </div>
+             <button id="sonuclari-kaydet" class="neomorfik-button">Sonuçları Kaydet</button>
+             <button id="iyilesme-takibi" class="neomorfik-button">İyileşme Takibi</button>
+             <p class="lisans">
+                Bu sitede kullanılan görsellerin telif hakları MIT Lisansı ile korunmaktadır.
+            </p>
+            <div class="onay-kutusu">
+                <input type="checkbox" id="isic-onay" name="isic-onay">
+                <label for="isic-onay">
+                    Verilerimin, uygulamanın geliştirilmesi amacıyla anonim olarak ISIC arşivine gönderilmesini kabul ediyorum.
+                </label>
+            </div>
+        </div>
+    </main>
+    <footer>
+        <p>Daha fazla bilgi için <a href="info-bilgi.pdf" download>bilgilendirme dosyasını</a> indirebilirsiniz.</p>
+        cilt.ai <span class="kanduras-medya-link" onclick="window.open('http://www.kandurasmedya.com', '_blank')">Kanduras Medya</span> oluşumudur. Tüm Hakları Saklıdır. Copyright 2025 ©
+    </footer>
+    <script>
+        const temaDegistirButton = document.querySelector(".tema-degistir-button");
+        const body = document.body;
+        const sonuclariKaydetButton = document.getElementById("sonuclari-kaydet");
+        const iyilesmeTakibiButton = document.getElementById("iyilesme-takibi");
+
+        // Header'daki kredi ve profil/klinik butonlarına onclick olayları eklendi
+        const krediButton = document.querySelector("header .kredi-button");
+        const profilButton = document.querySelector("header .profil-button");
+        const klinikButton = document.querySelector("header .klinik-button");
+        const ciltAiLogo = document.querySelector("header .cilt-ai-logo");
+
+        if (krediButton) {
+            krediButton.addEventListener("click", () => {
+                window.location.href = 'kredi-yukle.html';
+            });
+        }
+        if (profilButton) {
+            profilButton.addEventListener("click", () => {
+                window.location.href = 'profil-giris.html';
+            });
+        }
+        if (klinikButton) {
+            klinikButton.addEventListener("click", () => {
+                window.location.href = 'klinik-giris.html';
+            });
+        }
+        if (ciltAiLogo) {
+            ciltAiLogo.addEventListener("click", () => {
+                window.location.href = 'index.html';
+            });
+        }
+
+        // Tema değiştirme butonu header'da olmadığı için bu kısmı kontrol ettim.
+        // Eğer header'da tema değiştirme butonu eklenirse, bu kod tekrar aktif edilebilir.
+        if (temaDegistirButton) {
+            temaDegistirButton.addEventListener("click", () => {
+                if (body.classList.contains("acik-tema")) {
+                    body.classList.remove("acik-tema");
+                    body.classList.add("koyu-tema");
+                    temaDegistirButton.textContent = "Açık Tema";
+                } else {
+                    body.classList.remove("koyu-tema");
+                    body.classList.add("acik-tema");
+                    temaDegistirButton.textContent = "Koyu Tema";
+                }
+            });
+        }
+
+        sonuclariKaydetButton.addEventListener("click", () => {
+           alert("Sonuçlar kaydedildi!");
+        });
+
+        iyilesmeTakibiButton.addEventListener("click", () => {
+            // İyileşme takibi sayfasına yönlendirme yapılacak.
+            alert("İyileşme Takibi sayfasına yönlendiriliyorsunuz!");
+            // window.location.href = "iyilesme-takibi.html"; // Bu satır, iyilesme takibi sayfası oluşturulduğunda kullanılabilir.
+        });
+
+        // Gemini API Entegrasyonu: Kişiselleştirilmiş Bakım Rutini Oluşturma
+        const generateRoutineButton = document.getElementById('generate-routine-button');
+        const routineOutput = document.getElementById('routine-output');
+        const loadingIndicator = document.getElementById('loading-indicator');
+        const generatedRoutineContent = document.getElementById('generated-routine-content');
+
+        generateRoutineButton.addEventListener('click', async () => {
+            loadingIndicator.style.display = 'block';
+            generatedRoutineContent.innerHTML = ''; // Önceki içeriği temizle
+
+            // Formdan verileri al (şu anki değerler simüle edilmiştir)
+            const ciltTipi = document.getElementById('cilt-tipi').value;
+            const kurulukBolgeleri = document.getElementById('kuruluk-bolgeleri').value;
+            const ciltTedavisi = document.getElementById('cilt-tedavisi').value;
+            const ciltTonu = document.getElementById('cilt-tonu').value;
+            const yasAraligi = document.getElementById('yas-araligi').value;
+            const cinsiyet = document.getElementById('cinsiyet').value;
+            const hamilelik = document.getElementById('hamilelik').value;
+            const analizTuru = document.getElementById('analiz-turu').value;
+
+            const prompt = `Kullanıcının cilt analizi sonuçları şu şekildedir: Cilt Tipi: ${ciltTipi}, Kuruluk Bölgeleri: ${kurulukBolgeleri}, Cilt Tedavisi: ${ciltTedavisi}, Cilt Tonu: ${ciltTonu}, Yaş Aralığı: ${yasAraligi}, Cinsiyet: ${cinsiyet}, Hamilelik: ${hamilelik}, Analiz Türü: ${analizTuru}. Bu bilgilere dayanarak, bu kullanıcı için detaylı ve kişiselleştirilmiş bir günlük cilt bakım rutini (sabah ve akşam) önerileri oluştur. Rutin, temizleme, tonikleme, serum, nemlendirme ve güneş koruması gibi adımları içermelidir. Her adım için kısa açıklamalar ve neden bu ürünlerin/adımların önerildiği belirtilmelidir. Yanıtı Türkçe ve madde madde listeleyerek ver.`;
+
+            let chatHistory = [];
+            chatHistory.push({ role: "user", parts: [{ text: prompt }] });
+
+            const payload = { contents: chatHistory };
+            const apiKey = ""; // Canvas çalışma zamanında sağlayacak
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const result = await response.json();
+
+                if (result.candidates && result.candidates.length > 0 &&
+                    result.candidates[0].content && result.candidates[0].content.parts &&
+                    result.candidates[0].content.parts.length > 0) {
+                    const text = result.candidates[0].content.parts[0].text;
+                    generatedRoutineContent.innerHTML = `<pre>${text}</pre>`; // Önceden biçimlendirilmiş metin için pre etiketi kullan
+                } else {
+                    generatedRoutineContent.innerHTML = '<p style="color: red;">Rutin oluşturulurken bir hata oluştu veya yanıt alınamadı.</p>';
+                }
+            } catch (error) {
+                console.error("API çağrısı sırasında hata oluştu:", error);
+                generatedRoutineContent.innerHTML = '<p style="color: red;">API çağrısı sırasında bir hata oluştu. Lütfen daha sonra tekrar deneyin.</p>';
+            } finally {
+                loadingIndicator.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

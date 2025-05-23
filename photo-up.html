@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yapay Zeka Cilt Analizi - Fotoğraf Yükleme</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #e0e0e0; /* Orta gri arka plan */
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background-color: #d0d0d0; /* Header için biraz daha koyu gri */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        header .kredi-button {
+            background-color: #c0c0c0; /* Buton için orta gri */
+            color: #333;
+            border: 3px solid #b0b0b0; /* Kalın çerçeve, biraz daha koyu */
+            border-radius: 0;
+            padding: 10px 15px;
+            margin-right: 10px;
+            font-weight: 600;
+            cursor: pointer; /* Tıklanabilir olduğunu belirtmek için */
+        }
+        header .kredi-button span { /* Kredi yükle yazısını span içine alarak rengini koru */
+            color: red;
+            text-decoration: none;
+        }
+        header .cilt-ai-logo {
+            margin-right: auto;
+            margin-left: auto;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            font-size: 35px;
+            font-weight: bold;
+            color: #555; /* Daha az kontrastlı gri */
+            cursor: pointer; /* Tıklanabilir olduğunu belirtmek için */
+        }
+        header .cilt-ai-logo a { /* Bu linki kaldıracağımız için aslında gerekmeyecek ama olası bir durumda */
+            text-decoration: none !important;
+            color: inherit !important;
+        }
+        header .cilt-ai-logo img{
+            height: 100%;
+        }
+        header .sag-butonlar {
+            display: flex;
+            align-items: center;
+        }
+        header .profil-button, header .klinik-button {
+            display: flex;
+            align-items: center;
+            background-color: #c0c0c0; /* Buton için orta gri */
+            color: #333;
+            border: 3px solid #b0b0b0; /* Kalın çerçeve, biraz daha koyu */
+            border-radius: 0;
+            padding: 10px 15px;
+            font-weight: 600;
+            margin-left: 10px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            cursor: pointer; /* Tıklanabilir olduğunu belirtmek için */
+        }
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .container {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f0f0f0; /* İçerik kutusu için açık gri */
+            border: 3px solid #c0c0c0; /* Kalın çerçeve */
+            border-radius: 0;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+        .upload-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .surukle-birak-alani {
+            width: 300px;
+            height: 200px;
+            border: 3px dashed #c0c0c0; /* Orta gri çerçeve */
+            border-radius: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+            background-color: #e8e8e8; /* Hafif gri arka plan */
+        }
+        .surukle-birak-alani svg { /* SVG ikonları için stil */
+            width: 50px;
+            height: 50px;
+            margin-bottom: 10px;
+            stroke: #555; /* İkon rengi */
+        }
+        .surukle-birak-alani p {
+            font-size: 16px;
+            color: #555;
+        }
+        .ek-foto-butonlari {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .ek-foto-butonlari button {
+            padding: 10px 15px;
+            border: 3px solid #b0b0b0; /* Kalın çerçeve, biraz daha koyu */
+            border-radius: 0;
+            background-color: #c0c0c0; /* Buton için orta gri */
+            cursor: pointer;
+            font-size: 16px;
+            width: 45%;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #333;
+            gap: 5px; /* İkon ile yazı arasına boşluk */
+        }
+        .ek-foto-butonlari button svg { /* Butonlardaki SVG ikonları için stil */
+            height: 20px;
+            width: 20px;
+            vertical-align: middle;
+            stroke: #333; /* İkon rengi */
+        }
+        .ek-foto-butonlari button:nth-child(3),
+        .ek-foto-butonlari button:nth-child(4) {
+            margin-bottom: 0;
+        }
+
+        .orne-resimler {
+            display: none;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        .orne-resimler img {
+            width: 30%;
+            height: auto;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+         .ileri-butonu {
+            background-color: #3498db;
+            color: #fff;
+            padding: 15px 30px;
+            border: 3px solid #2980b9; /* Kalın çerçeve */
+            border-radius: 0;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin: 10px auto;
+            display: block;
+            font-weight: bold;
+            opacity: 0.5; /* Disabled olduğunda */
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .ileri-butonu:hover {
+            background-color: #217dbb;
+        }
+
+        .ileri-butonu.aktif {
+            opacity: 1;
+        }
+        footer {
+            background-color: #d0d0d0; /* Footer için orta gri */
+            color: #333;
+            padding: 10px;
+            text-align: center;
+            font-size: 14px;
+            margin-top: 20px;
+            border-top: 3px solid #c0c0c0;
+        }
+        /* Footer içindeki span'ın stilini ayarla */
+        footer .kanduras-medya-link {
+            color: inherit; /* Üst elementin rengini al */
+            text-decoration: none; /* Alt çizgiyi kaldır */
+            font-weight: 600; /* Kalın yapabilirsin */
+            cursor: pointer;
+        }
+        /* Footer içindeki link stili (yeni eklenen bilgi dosyası için) */
+        footer p a {
+            color: #3498db; /* Mavi tonunda bir renk */
+            text-decoration: underline; /* Alt çizgiyi koru */
+            font-weight: bold;
+        }
+        footer p a:hover {
+            color: #217dbb; /* Hover'da daha koyu mavi */
+        }
+
+        /* Klinik Banner Stilleri */
+        .klinik-banner {
+            background-color: #e0f7fa; /* Mevcut banner rengi */
+            color: #00897b;
+            padding: 15px;
+            text-align: center;
+            border-bottom: 3px solid #b2ebf2;
+            margin-bottom: 20px;
+            border-radius: 0; /* Köşeli */
+        }
+        .koyu-tema .klinik-banner { /* Koyu tema için stil (varsa) */
+            background-color: #37474f;
+            color: #fff;
+            border-bottom-color: #455a64;
+        }
+    </style>
+</head>
+<body class="acik-tema">
+    <header>
+        <div class="kredi-button" onclick="window.location.href='kredi-yukle.html'">
+            100 Kredi Yüklü <span style="color: red;">Kredi Yükle</span>
+        </div>
+        <div class="cilt-ai-logo" onclick="window.location.href='index.html'">
+             cilt.ai beta v1.26
+        </div>
+        <div class="sag-butonlar">
+            <div class="profil-button" onclick="window.location.href='profil-giris.html'">Profil Giriş</div>
+            <div class="klinik-button" onclick="window.location.href='klinik-giris.html'">Klinik Giriş</div>
+        </div>
+    </header>
+    <main>
+        <div class="container">
+            <div class="klinik-banner">
+                <strong>Klinik Adı:</strong> INNOVATION YALOVA | <strong>Klinik Personeli:</strong> Yağmur Aydan Anıkarslan
+            </div>
+            <h1>Cilt Analizi - Adım 2: Fotoğraf Yükleme</h1>
+            <div class="upload-container">
+                <div class="surukle-birak-alani" id="surukle-birak-alani">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-upload"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
+                    <p>Fotoğrafı buraya sürükleyin veya seçin</p>
+                </div>
+                <div class="ek-foto-butonlari">
+                    <button id="yuz-on-button">Ekle <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-upload"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg></button>
+                    <button id="yuz-sol-button">Ekle <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucude-upload"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg></button>
+                    <button id="yuz-sag-button">Ekle <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-upload"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg></button>
+                    <button id="yuz-profil-button">Ekle <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-upload"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg></button>
+                    <input type="file" id="dosya-sec" accept="image/*" style="display: none;">
+                </div>
+            </div>
+            <div style="display: flex; justify-content: center;">
+                <button id="ileri-buton" class="ileri-butonu" disabled>Karşıya Yükle</button>
+            </div>
+        </div>
+    </main>
+    <footer>
+        <p>Daha fazla bilgi için <a href="info-bilgi.pdf" download>bilgilendirme dosyasını</a> indirebilirsiniz.</p>
+        cilt.ai <span class="kanduras-medya-link" onclick="window.open('http://www.kandurasmedya.com', '_blank')">Kanduras Medya</span> oluşumudur. Tüm Hakları Saklıdır. Copyright 2025 ©
+    </footer>
+    <script>
+        const dosyaSec = document.getElementById("dosya-sec");
+        const surukleBirakAlani = document.getElementById("surukle-birak-alani");
+        const ileriButton = document.getElementById("ileri-buton");
+
+        const yuzOnButton = document.getElementById("yuz-on-button");
+        const yuzSolButton = document.getElementById("yuz-sol-button");
+        const yuzSagButton = document.getElementById("yuz-sag-button");
+        const yuzProfilButton = document.getElementById("yuz-profil-button");
+
+
+        let fotoYuklendi = false;
+        let fotoSayisi = 0;
+
+
+        yuzOnButton.addEventListener("click", () => dosyaSec.click());
+        yuzSolButton.addEventListener("click", () => dosyaSec.click());
+        yuzSagButton.addEventListener("click", () => dosyaSec.click());
+        yuzProfilButton.addEventListener("click", () => dosyaSec.click());
+
+
+        dosyaSec.addEventListener("change", function() {
+             fotoSayisi++;
+             if(fotoSayisi >= 1){
+                fotoYuklendi = true;
+                ileriButton.classList.add("aktif");
+                ileriButton.disabled = false; // İleri butonunu aktif et
+             }
+
+        });
+
+        surukleBirakAlani.addEventListener("dragover", function(e) {
+            e.preventDefault();
+            this.classList.add("surukleniyor");
+        });
+
+        surukleBirakAlani.addEventListener("dragleave", function(e) {
+            e.preventDefault();
+            this.classList.remove("surukleniyor");
+        });
+
+         surukleBirakAlani.addEventListener("drop", function(e) {
+            e.preventDefault();
+            this.classList.remove("surukleniyor");
+             fotoSayisi++;
+             if(fotoSayisi >= 1){
+                fotoYuklendi = true;
+                ileriButton.classList.add("aktif");
+                ileriButton.disabled = false; // İleri butonunu aktif et
+             }
+        });
+
+        ileriButton.addEventListener("click", function() {
+             if (fotoYuklendi) {
+                window.location.href = "sonuclar.html"; // Bağlantı güncellendi
+             }
+        });
+    </script>
+</body>
+</html>

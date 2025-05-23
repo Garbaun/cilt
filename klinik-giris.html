@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Klinik Giriş</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #e0e0e0; /* Orta gri arka plan */
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background-color: #d0d0d0; /* Header için biraz daha koyu gri */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        header .kredi-button {
+            background-color: #c0c0c0; /* Buton için orta gri */
+            color: #333;
+            border: 3px solid #b0b0b0; /* Kalın çerçeve, biraz daha koyu */
+            border-radius: 0;
+            padding: 10px 15px;
+            margin-right: 10px;
+            font-weight: 600;
+            cursor: pointer; /* Buton için el işareti */
+        }
+        header .kredi-button span { /* Kredi Yükle yazısı için span eklendi */
+            color: red;
+            text-decoration: none;
+        }
+        header .cilt-ai-logo {
+            margin-right: auto;
+            margin-left: auto;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            font-size: 35px;
+            font-weight: bold;
+            color: #555; /* Daha az kontrastlı gri */
+            cursor: pointer; /* Logo için el işareti */
+        }
+        header .cilt-ai-logo img{
+            height: 100%;
+        }
+        header .sag-butonlar {
+            display: flex;
+            align-items: center;
+        }
+        header .profil-button, header .klinik-button {
+            display: flex;
+            align-items: center;
+            background-color: #c0c0c0; /* Buton için orta gri */
+            color: #333;
+            border: 3px solid #b0b0b0; /* Kalın çerçeve, biraz daha koyu */
+            border-radius: 0;
+            padding: 10px 15px;
+            font-weight: 600;
+            margin-left: 10px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            cursor: pointer; /* Butonlar için el işareti */
+        }
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .container {
+            width: 100%;
+            max-width: 800px; /* Genişlik 800px olarak güncellendi */
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f0f0f0; /* İçerik kutusu için açık gri */
+            border: 3px solid #c0c0c0; /* Kalın çerçeve */
+            border-radius: 0;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+        .form-grup {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        .form-grup label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+            font-size: 1.1em;
+        }
+        .form-grup input[type="text"],
+        .form-grup input[type="password"] {
+            width: calc(100% - 24px); /* Padding'i hesaba katıyoruz */
+            padding: 10px;
+            border: 3px solid #c0c0c0; /* Orta gri çerçeve */
+            border-radius: 0;
+            font-size: 16px;
+            box-sizing: border-box; /* Padding'i genişliğe dahil et */
+            background-color: #f5f5f5; /* Input arka planı */
+            color: #333;
+        }
+        .button-group { /* Yeni buton grubu için flex container */
+            display: flex;
+            flex-wrap: wrap; /* Küçük ekranlarda alt alta geçiş için */
+            justify-content: center;
+            gap: 15px; /* Butonlar arası boşluk */
+            margin-top: 20px;
+        }
+        .neomorfik-button, .google-button { /* Butonlar için genel stil */
+            padding: 15px 30px;
+            border-radius: 0;
+            font-size: 18px;
+            cursor: pointer;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s ease;
+            font-weight: bold;
+            flex-grow: 1; /* Butonların eşit genişlikte büyümesini sağlar */
+            max-width: 300px; /* Maksimum genişlik belirleyerek çok büyümesini engeller */
+            min-width: 200px; /* Minimum genişlik belirleyerek çok küçülmesini engeller */
+        }
+        .neomorfik-button {
+            border: 3px solid #2980b9;
+            background-color: #3498db;
+            color: #fff;
+            opacity: 0.5; /* Disabled olduğunda */
+        }
+        .neomorfik-button.aktif {
+            opacity: 1;
+        }
+        .neomorfik-button:hover {
+            background-color: #217dbb;
+        }
+        .google-button {
+            background-color: #dd4b39; /* Google kırmızısı */
+            border: 3px solid #c23321;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px; /* İkon ile yazı arasına boşluk */
+        }
+        .google-button:hover {
+            background-color: #c23321;
+        }
+        .google-button img {
+            width: 24px; /* Google ikon boyutu */
+            height: 24px;
+        }
+        footer {
+            background-color: #d0d0d0; /* Footer için orta gri */
+            color: #333;
+            padding: 10px;
+            text-align: center;
+            font-size: 14px;
+            margin-top: 20px;
+            border-top: 3px solid #c0c0c0;
+        }
+        .kanduras-medya-link {
+            cursor: pointer; /* Link için el işareti */
+        }
+        /* Sözleşme metinleri ve onay kutusu stilleri */
+        .sozlesme-metin {
+            max-height: 150px;
+            overflow-y: auto;
+            border: 3px solid #c0c0c0; /* Orta gri çerçeve */
+            border-radius: 0;
+            padding: 15px;
+            margin-bottom: 15px;
+            background-color: #e8e8e8; /* Hafif gri arka plan */
+            text-align: left;
+            line-height: 1.6;
+            font-size: 0.95em;
+        }
+        .sozlesme-metin h2, .sozlesme-metin h3 {
+            font-size: 1.2em;
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+        .sozlesme-metin p {
+            margin-bottom: 10px;
+        }
+        .onay-kutusu {
+            display: flex;
+            align-items: flex-start;
+            margin-top: 15px;
+            text-align: left;
+        }
+        .onay-kutusu input[type="checkbox"] {
+            margin-right: 10px;
+            flex-shrink: 0;
+            width: 20px;
+            height: 20px;
+            border: 2px solid red;
+            accent-color: red;
+        }
+        .onay-kutusu label {
+            color: red;
+            font-weight: 600;
+            font-size: 1em;
+            line-height: 1.4;
+        }
+        /* Modal Stilleri */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1000; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px); /* Hafif bulanıklık efekti */
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto; /* Center vertically and horizontally */
+            padding: 30px;
+            border: 3px solid #c0c0c0;
+            border-radius: 0;
+            width: 80%;
+            max-width: 400px;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        .close-button {
+            color: #aaa;
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .close-button:hover,
+        .close-button:focus {
+            color: #333;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        #modal-message {
+            margin-bottom: 20px;
+            font-size: 1.1em;
+            color: #333;
+        }
+        #modal-ok-button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            font-size: 1em;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="kredi-button" onclick="window.location.href='kredi-yukle.html'">
+            100 Kredi Yüklü <span style="color: red;">Kredi Yükle</span>
+        </div>
+        <div class="cilt-ai-logo" onclick="window.location.href='index.html'">
+             cilt.ai beta v1.26
+        </div>
+        <div class="sag-butonlar">
+            <div class="profil-button" onclick="window.location.href='profil-giris.html'">Profil Giriş</div>
+            <div class="klinik-button" onclick="window.location.href='klinik-giris.html'">Klinik Giriş</div>
+        </div>
+    </header>
+    <main>
+        <div class="container">
+            <h1>Klinik Girişi</h1>
+            <form id="klinik-giris-form">
+                <div class="form-grup">
+                    <label for="klinik-adi">Klinik Adı:</label>
+                    <input type="text" id="klinik-adi" name="klinik-adi" required>
+                </div>
+
+                <div class="form-grup">
+                    <label for="personel-adi">Klinik Personeli Adı:</label>
+                    <input type="text" id="personel-adi" name="personel-adi" required>
+                </div>
+
+                <div class="form-grup">
+                    <label for="sifre">Şifre:</label>
+                    <input type="password" id="sifre" name="sifre" required>
+                </div>
+
+                <div class="sozlesmeler">
+                    <h3>Sözleşmeler ve Lisanslar</h3>
+                    <div class="sozlesme-metin">
+                        <h2>Cilt Analizi Yapay Zeka Uygulaması Sözleşmeleri ve Lisanslar</h2>
+                        <h3>1. Kullanım Şartları Sözleşmesi</h3>
+                        <p>Bu uygulama, cilt analizi hizmeti sunar. Uygulamayı kullanarak, kişisel verilerinizin toplanmasına ve işlenmesine izin vermiş olursunuz. Analiz sonuçları bilgilendirme amaçlıdır ve profesyonel tıbbi tavsiye yerine geçmez. Lütfen herhangi bir sağlık sorunu için uzmana danışın. Uygulamanın kötüye kullanımı yasaktır ve yasal işlem gerektirebilir.</p>
+                        <h3>2. Gizlilik Politikası</h3>
+                        <p>Kişisel verilerinizin güvenliği bizim için önemlidir. Topladığımız veriler, hizmetlerimizi sunmak, iyileştirmek ve kişiselleştirmek amacıyla kullanılır. Verileriniz üçüncü taraflarla paylaşılmaz veya satılmaz. Detaylı bilgi için gizlilik politikamızı inceleyebilirsiniz.</p>
+                        <h3>3. Sorumluluk Reddi Beyanı</h3>
+                        <p>Yapay zeka analiz sonuçları, profesyonel tıbbi tavsiyenin veya teşhisin yerini tutmaz. Uygulama tarafından sağlanan bilgiler yalnızca bilgilendirme amaçlıdır ve herhangi bir sağlık sorunu için tıbbi tavsiye olarak yorumlanmamalıdır. Herhangi bir sağlık endişeniz varsa lütfen bir uzmana danışın.</p>
+                        <h3>4. MIT Lisansı</h3>
+                        <p>Telif Hakkı © 2025 cilt.ai</p>
+                        <p>İşbu belge ile, bu yazılımı ve ilgili belgeleri ("Yazılım") herhangi bir kısıtlama olmaksızın, ticari kullanım, çoğaltma, değiştirme, birleştirme, yayınlama, dağıtma, alt lisans verme ve/veya kopyalarını satma dahil ancak bunlarla sınırlı olmamak üzere, Yazılımda işlem yapmak için ücretsiz olarak izin verilir ve Yazılımın kopyalarını alan kişilere aşağıdaki koşullar altında izin verilir:</p>
+                        <p>Yukarıdaki telif hakkı bildirimi ve bu izin bildirimi, Yazılımın tüm kopyalarına veya önemli bölümlerine dahil edilecektir.</p>
+                        <p>YAZILIM "OLDUĞU GİBİ" SUNULUR, AÇIK VEYA ZIMNİ HİÇBİR GARANTİ VERİLMEZ, SATILABİLİRLİK, BELİRLİ BİR AMACA UYGUNLUK VE İHLAL ETMEME GARANTİLERİ DAHİL ANCAK BUNLARLA SINIRLI DEĞİLDİR. HİÇBİR DURUMDA YAZARLAR VEYA TELİF HAKKI SAHİPLERİ, SÖZLEŞME, HAKSIZ FİİL VEYA BAŞKA BİR ŞEKİLDE OLMAK ÜZERE, YAZILIMDAN VEYA YAZILIMIN KULLANIMINDAN VEYA DİĞER İŞLEMLERDEN KAYNAKLANAN VEYA BUNLARLA İLGİLİ HİÇBİR İDDİA, ZARAR VEYA DİĞER YÜKÜMLÜLÜKTEN SORUMLU TUTULAMAZ.</p>
+                    </div>
+
+                    <div class="onay-kutusu">
+                        <input type="checkbox" id="sozlesme-onay" name="sozlesme-onay" required>
+                        <label for="sozlesme-onay">Yukarıdaki sözleşmeleri ve lisansları okudum ve kabul ediyorum.</label>
+                    </div>
+                </div>
+
+                <div class="button-group"> <button type="submit" id="giris-yap-button" class="neomorfik-button" disabled>Giriş Yap</button>
+                    <button type="button" id="google-kayit-button" class="google-button">
+                        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google Logo">
+                        Google ile Kayıt Ol
+                    </button>
+                </div>
+            </form>
+        </div>
+    </main>
+    <footer>
+        cilt.ai <span class="kanduras-medya-link" onclick="window.open('http://www.kandurasmedya.com', '_blank')">Kanduras Medya</span> oluşumudur. Tüm Hakları Saklıdır. Copyright 2025 ©
+    </footer>
+
+    <div id="custom-alert-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <p id="modal-message"></p>
+            <button id="modal-ok-button" class="neomorfik-button">Tamam</button>
+        </div>
+    </div>
+
+    <script>
+        const klinikGirisForm = document.getElementById('klinik-giris-form');
+        const girisYapButton = document.getElementById('giris-yap-button');
+        const sozlesmeOnay = document.getElementById('sozlesme-onay');
+        const googleKayitButton = document.getElementById('google-kayit-button'); // Yeni Google butonu
+
+        // Custom Alert Modal elementleri
+        const customAlertModal = document.getElementById('custom-alert-modal');
+        const modalMessage = document.getElementById('modal-message');
+        const modalOkButton = document.getElementById('modal-ok-button');
+        const closeButton = document.querySelector('.modal .close-button');
+
+        // Custom Alert modalını gösterme fonksiyonu
+        function showCustomAlert(message) {
+            modalMessage.textContent = message;
+            customAlertModal.style.display = 'flex'; // Use flex to center
+        }
+
+        // Custom Alert modalını gizleme fonksiyonu
+        function hideCustomAlert() {
+            customAlertModal.style.display = 'none';
+        }
+
+        // Modal buton ve kapatma işlevleri
+        modalOkButton.addEventListener('click', hideCustomAlert);
+        closeButton.addEventListener('click', hideCustomAlert);
+
+        // Modal dışına tıklandığında kapatma
+        window.addEventListener('click', (event) => {
+            if (event.target == customAlertModal) {
+                hideCustomAlert();
+            }
+        });
+
+        // Tüm form elementlerini ve sözleşme onayını kontrol eden fonksiyon
+        function kontrolEt() {
+            let tumAlanlarDolu = true;
+
+            // Tüm 'required' input elemanlarını kontrol et
+            document.querySelectorAll('#klinik-giris-form input[required]').forEach(input => {
+                if (input.value.trim() === '') {
+                    tumAlanlarDolu = false;
+                }
+            });
+
+            // Sözleşme onayını kontrol et
+            if (!sozlesmeOnay.checked) {
+                tumAlanlarDolu = false;
+            }
+
+            // Giriş Yap butonunu aktif/pasif yap
+            if (tumAlanlarDolu) {
+                girisYapButton.classList.add('aktif');
+                girisYapButton.disabled = false;
+            } else {
+                girisYapButton.classList.remove('aktif');
+                girisYapButton.disabled = true;
+            }
+        }
+
+        // Formdaki herhangi bir değişiklikte kontrolEt fonksiyonunu çağır
+        klinikGirisForm.addEventListener('input', kontrolEt); // input olayını dinle (metin alanları için)
+        sozlesmeOnay.addEventListener('change', kontrolEt); // Sözleşme onay kutusu değiştiğinde de kontrol et
+
+        // Sayfa yüklendiğinde ilk kontrolü yap
+        document.addEventListener('DOMContentLoaded', kontrolEt);
+
+        klinikGirisForm.addEventListener('submit', function(event) {
+            event.preventDefault(); // Formun varsayılan gönderimini engelle
+
+            // Eğer buton aktif değilse, gönderimi durdur
+            if (girisYapButton.disabled) {
+                showCustomAlert("Lütfen tüm zorunlu alanları doldurun ve sözleşmeleri onaylayın.");
+                return;
+            }
+
+            const klinikAdi = document.getElementById('klinik-adi').value;
+            const personelAdi = document.getElementById('personel-adi').value;
+            const sifre = document.getElementById('sifre').value;
+
+            // Burada gerçek bir kimlik doğrulama işlemi yapılabilir.
+            // Şimdilik sadece bir uyarı mesajı gösteriyoruz.
+            showCustomAlert(`Klinik: ${klinikAdi}, Personel: ${personelAdi} ile giriş yapıldı!`);
+            // Başarılı girişten sonra yönlendirme yapılabilir:
+            // window.location.href = 'klinik-kontrol-paneli.html';
+        });
+
+        // Google ile Kayıt Ol butonuna tıklama işlevi
+        googleKayitButton.addEventListener('click', () => {
+            showCustomAlert("Google ile kayıt olma özelliği şu anda geliştirilmektedir.");
+            // Burada Google ile kayıt olma/giriş yapma akışı başlatılabilir.
+        });
+
+        // Header ve Footer butonlarına tıklama olayları
+        const krediButton = document.querySelector("header .kredi-button");
+        const profilButton = document.querySelector("header .profil-button");
+        const klinikButton = document.querySelector("header .klinik-button");
+        const ciltAiLogo = document.querySelector("header .cilt-ai-logo");
+        const kandurasMedyaLink = document.querySelector("footer .kanduras-medya-link");
+
+
+        if (krediButton) {
+            krediButton.addEventListener("click", () => {
+                window.location.href = 'kredi-yukle.html';
+            });
+        }
+        if (profilButton) {
+            profilButton.addEventListener("click", () => {
+                window.location.href = 'profil-giris.html';
+            });
+        }
+        if (klinikButton) {
+            klinikButton.addEventListener("click", () => {
+                window.location.href = 'klinik-giris.html'; // Zaten bu sayfada olduğunuz için yenileme görevi görür
+            });
+        }
+        if (ciltAiLogo) {
+            ciltAiLogo.addEventListener("click", () => {
+                window.location.href = 'index.html';
+            });
+        }
+        if (kandurasMedyaLink) {
+             kandurasMedyaLink.addEventListener("click", () => {
+                 window.open('http://www.kandurasmedya.com', '_blank');
+             });
+         }
+    </script>
+</body>
+</html>
